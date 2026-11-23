@@ -1,7 +1,4 @@
 {
   "version": 2,
-  "framework": "nextjs",
-  "installCommand": "npm --prefix chartdeck-app install --no-audit --no-fund",
-  "buildCommand": "npm --prefix chartdeck-app run build",
-  "outputDirectory": "chartdeck-app/.next"
+  "framework": "nextjs"
 }
