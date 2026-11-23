@@ -1,0 +1,39 @@
+name: Sync upstream Graphic Walker
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-main
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out ChartDeck main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure merge identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream main
+        run: |
+          git remote add upstream https://github.com/kanaries/graphic-walker.git || git remote set-url upstream https://github.com/kanaries/graphic-walker.git
+          git fetch --no-tags upstream main
+
+      - name: Merge and push upstream changes
+        run: |
+          git merge --no-edit --no-ff upstream/main
+          git push origin HEAD:main
